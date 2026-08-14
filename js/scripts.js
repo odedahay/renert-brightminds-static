@@ -13,16 +13,46 @@ if (nav) {
     window.addEventListener("scroll", updateStickyNav, { passive: true });
 }
 
+if (window.Swiper) {
+    new Swiper(".testimonials__viewport", {
+        autoplay: {
+            delay: 3500,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true,
+        },
+        centeredSlides: true,
+        grabCursor: true,
+        initialSlide: 1,
+        loop: true,
+        pagination: {
+            clickable: true,
+            el: ".testimonials__pagination",
+        },
+        slidesPerView: "auto",
+        spaceBetween: 25,
+        speed: 550,
+    });
+}
+
 if (navToggle && navMenu) {
-    navToggle.addEventListener("click", () => {
-        const isOpen = navMenu.classList.toggle("is-open");
+    const navToggleLabel = navToggle.querySelector(".nav__toggle-label");
+    const setMobileMenuState = (isOpen) => {
+        navMenu.classList.toggle("is-open", isOpen);
         navToggle.setAttribute("aria-expanded", String(isOpen));
+
+        if (navToggleLabel) {
+            navToggleLabel.textContent = isOpen ? "Close" : "Menu";
+        }
+    };
+
+    navToggle.addEventListener("click", () => {
+        const isOpen = navToggle.getAttribute("aria-expanded") !== "true";
+        setMobileMenuState(isOpen);
     });
 
     navMenu.addEventListener("click", (event) => {
         if (event.target.closest(".nav__link, .nav__portal")) {
-            navMenu.classList.remove("is-open");
-            navToggle.setAttribute("aria-expanded", "false");
+            setMobileMenuState(false);
         }
     });
 }

@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Renert Bright Minds after-school math and writing programs for students ages 5 and up.">
     <title>Renert Bright Minds</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -106,9 +110,9 @@
 
         <section class="testimonials" aria-labelledby="testimonials-title">
             <h2 class="section-title testimonials__title" id="testimonials-title">Why Families Choose Bright Minds</h2>
-            <div class="testimonials__viewport" tabindex="0" aria-label="Family testimonials">
-                <div class="testimonials__track">
-                    <article class="review-card">
+            <div class="testimonials__viewport swiper" aria-label="Family testimonials">
+                <div class="testimonials__track swiper-wrapper">
+                    <article class="review-card swiper-slide">
                         <div class="review-card__profile">
                             <img class="review-card__avatar" src="assets/icons/avatar-circle.svg" alt="">
                             <div class="review-card__identity">
@@ -130,7 +134,7 @@
                         <button class="review-card__more" type="button">Continue Reading</button>
                     </article>
 
-                    <article class="review-card">
+                    <article class="review-card swiper-slide">
                         <div class="review-card__profile">
                             <img class="review-card__avatar" src="assets/icons/avatar-circle.svg" alt="">
                             <div class="review-card__identity">
@@ -151,7 +155,49 @@
                         <p class="review-card__copy" data-review-copy>We chose Bright Minds because we were moving abroad and the education quality was not the same. Our kids kept motivated, had great instructors, and continued to progress at their own pace. They won math competitions and were labeled human calculators by classmates. The experience and practice gave them strong mental math and confidence as they navigated moving schools.</p>
                     </article>
 
-                    <article class="review-card">
+                    <article class="review-card swiper-slide">
+                        <div class="review-card__profile">
+                            <img class="review-card__avatar" src="assets/icons/avatar-circle.svg" alt="">
+                            <div class="review-card__identity">
+                                <div class="review-card__name-row">
+                                    <h3 class="review-card__name">Tara Ikeda</h3>
+                                    <img class="review-card__badge" src="assets/images/review-badge.png" alt="Verified review">
+                                </div>
+                                <p class="review-card__location">Calgary, Canada</p>
+                            </div>
+                        </div>
+                        <div class="review-card__stars" aria-label="5 out of 5 stars">
+                            <img src="assets/images/star.png" alt="">
+                            <img src="assets/images/star.png" alt="">
+                            <img src="assets/images/star.png" alt="">
+                            <img src="assets/images/star.png" alt="">
+                            <img src="assets/images/star.png" alt="">
+                        </div>
+                        <p class="review-card__copy" data-review-copy>My son has been enrolled in both math and literacy streams with Bright Minds for the past four years. I can't imagine learning without Bright Minds. Leave the teaching to the experts! The support is top notch, the program is amazing and the teachers are rock stars!</p>
+                    </article>
+
+                    <article class="review-card swiper-slide">
+                        <div class="review-card__profile">
+                            <img class="review-card__avatar" src="assets/icons/avatar-circle.svg" alt="">
+                            <div class="review-card__identity">
+                                <div class="review-card__name-row">
+                                    <h3 class="review-card__name">Tara Ikeda</h3>
+                                    <img class="review-card__badge" src="assets/images/review-badge.png" alt="Verified review">
+                                </div>
+                                <p class="review-card__location">Calgary, Canada</p>
+                            </div>
+                        </div>
+                        <div class="review-card__stars" aria-label="5 out of 5 stars">
+                            <img src="assets/images/star.png" alt="">
+                            <img src="assets/images/star.png" alt="">
+                            <img src="assets/images/star.png" alt="">
+                            <img src="assets/images/star.png" alt="">
+                            <img src="assets/images/star.png" alt="">
+                        </div>
+                        <p class="review-card__copy" data-review-copy>My son has been enrolled in both math and literacy streams with Bright Minds for the past four years. I can't imagine learning without Bright Minds. Leave the teaching to the experts! The support is top notch, the program is amazing and the teachers are rock stars!</p>
+                    </article>
+
+                    <article class="review-card swiper-slide">
                         <div class="review-card__profile">
                             <img class="review-card__avatar" src="assets/icons/avatar-circle.svg" alt="">
                             <div class="review-card__identity">
@@ -172,6 +218,7 @@
                         <p class="review-card__copy" data-review-copy>My son has been enrolled in both math and literacy streams with Bright Minds for the past four years. I can't imagine learning without Bright Minds. Leave the teaching to the experts! The support is top notch, the program is amazing and the teachers are rock stars!</p>
                     </article>
                 </div>
+                <div class="testimonials__pagination swiper-pagination"></div>
             </div>
         </section>
 
@@ -225,6 +272,7 @@
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
     <script src="js/scripts.js"></script>
 </body>
 </html>

@@ -349,7 +349,7 @@ button {
     bottom: 0;
     left: clamp(350px, 48vw, 625px);
     position: absolute;
-    right: -21rem;
+    right: calc((1280px - 100vw) / 2);
     top: 0;
 }
 

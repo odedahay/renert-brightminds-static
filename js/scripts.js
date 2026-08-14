@@ -13,8 +13,10 @@ if (nav) {
     window.addEventListener("scroll", updateStickyNav, { passive: true });
 }
 
-if (window.Swiper) {
-    new Swiper(".testimonials__viewport", {
+const testimonialsViewport = document.querySelector(".testimonials__viewport");
+
+if (window.Swiper && testimonialsViewport) {
+    new Swiper(testimonialsViewport, {
         autoplay: {
             delay: 3500,
             disableOnInteraction: false,
@@ -33,6 +35,20 @@ if (window.Swiper) {
         speed: 550,
     });
 }
+
+document.querySelectorAll(".faq-item__trigger").forEach((trigger) => {
+    trigger.addEventListener("click", () => {
+        const item = trigger.closest(".faq-item");
+        const isOpen = trigger.getAttribute("aria-expanded") === "true";
+
+        if (!item) {
+            return;
+        }
+
+        item.classList.toggle("is-open", !isOpen);
+        trigger.setAttribute("aria-expanded", String(!isOpen));
+    });
+});
 
 if (navToggle && navMenu) {
     const navToggleLabel = navToggle.querySelector(".nav__toggle-label");

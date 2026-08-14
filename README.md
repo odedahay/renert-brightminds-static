@@ -1,0 +1,1 @@
+# renert-brightminds-static

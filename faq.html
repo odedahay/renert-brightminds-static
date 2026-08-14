@@ -75,33 +75,33 @@
                 </header>
 
                 <div class="faq-categories" aria-label="FAQ categories">
-                    <article class="faq-category">
+                    <button class="faq-category" type="button" data-faq-category="started">
                         <img class="faq-category__icon" src="assets/icons/faq-getting-started.png" alt="">
                         <h3 class="faq-category__title">Getting<br>Started</h3>
-                    </article>
-                    <article class="faq-category">
+                    </button>
+                    <button class="faq-category" type="button" data-faq-category="assessments">
                         <img class="faq-category__icon" src="assets/icons/faq-assessments.png" alt="">
                         <h3 class="faq-category__title">Assessments<br>&amp; Placement</h3>
-                    </article>
-                    <article class="faq-category">
+                    </button>
+                    <button class="faq-category" type="button" data-faq-category="programs">
                         <img class="faq-category__icon" src="assets/icons/faq-programs.png" alt="">
                         <h3 class="faq-category__title">Programs<br>&amp; Classes</h3>
-                    </article>
-                    <article class="faq-category">
+                    </button>
+                    <button class="faq-category" type="button" data-faq-category="scheduling">
                         <img class="faq-category__icon" src="assets/icons/faq-scheduling.png" alt="">
                         <h3 class="faq-category__title">Scheduling<br>&amp; Attendance</h3>
-                    </article>
-                    <article class="faq-category">
+                    </button>
+                    <button class="faq-category" type="button" data-faq-category="registration">
                         <img class="faq-category__icon" src="assets/icons/faq-registration.png" alt="">
                         <h3 class="faq-category__title">Registration<br>&amp; Fees</h3>
-                    </article>
+                    </button>
                 </div>
             </div>
         </section>
 
         <section class="faq-accordion" id="faqs" aria-label="Frequently asked questions">
             <div class="faq-accordion__list">
-                <article class="faq-item">
+                <article class="faq-item" data-faq-tags="started assessments">
                     <button class="faq-item__trigger" type="button" aria-expanded="false">
                         <span>How do we get started?</span>
                         <img class="faq-item__icon" src="assets/icons/arrow-down.svg" alt="">
@@ -110,7 +110,7 @@
                         <p>Book a free assessment so we can understand your child's current level and recommend the right class placement.</p>
                     </div>
                 </article>
-                <article class="faq-item">
+                <article class="faq-item" data-faq-tags="started programs">
                     <button class="faq-item__trigger" type="button" aria-expanded="false">
                         <span>What is Bright Minds?</span>
                         <img class="faq-item__icon" src="assets/icons/arrow-down.svg" alt="">
@@ -119,7 +119,7 @@
                         <p>Bright Minds is Renert's after-school math and writing enrichment program for students ages 5 and up.</p>
                     </div>
                 </article>
-                <article class="faq-item">
+                <article class="faq-item" data-faq-tags="programs">
                     <button class="faq-item__trigger" type="button" aria-expanded="false">
                         <span>How is your program different from other tutoring programs?</span>
                         <img class="faq-item__icon" src="assets/icons/arrow-down.svg" alt="">
@@ -128,7 +128,7 @@
                         <p>Students are grouped by readiness and challenged with enrichment-style instruction instead of only homework support.</p>
                     </div>
                 </article>
-                <article class="faq-item">
+                <article class="faq-item" data-faq-tags="assessments">
                     <button class="faq-item__trigger" type="button" aria-expanded="false">
                         <span>Why does my child need to have an assessment before joining the program?</span>
                         <img class="faq-item__icon" src="assets/icons/arrow-down.svg" alt="">
@@ -137,7 +137,7 @@
                         <p>The assessment helps place each student with the right peer group, instructor, and level of challenge.</p>
                     </div>
                 </article>
-                <article class="faq-item">
+                <article class="faq-item" data-faq-tags="scheduling">
                     <button class="faq-item__trigger" type="button" aria-expanded="false">
                         <span>Our family has a tight schedule. Is there a class at the right level and at the right time for my child?</span>
                         <img class="faq-item__icon" src="assets/icons/arrow-down.svg" alt="">
@@ -146,7 +146,7 @@
                         <p>Class options depend on level, program, and current availability. Contact us and we can review suitable schedule options.</p>
                     </div>
                 </article>
-                <article class="faq-item">
+                <article class="faq-item" data-faq-tags="scheduling registration">
                     <button class="faq-item__trigger" type="button" aria-expanded="false">
                         <span>How long do the classes run and what are the tuition fees?</span>
                         <img class="faq-item__icon" src="assets/icons/arrow-down.svg" alt="">
@@ -155,7 +155,7 @@
                         <p>Class length and tuition vary by program and schedule. The team can share current details after assessment and placement.</p>
                     </div>
                 </article>
-                <article class="faq-item">
+                <article class="faq-item" data-faq-tags="programs scheduling">
                     <button class="faq-item__trigger" type="button" aria-expanded="false">
                         <span>Do you offer online classes?</span>
                         <img class="faq-item__icon" src="assets/icons/arrow-down.svg" alt="">
@@ -164,7 +164,7 @@
                         <p>Yes, Bright Minds offers online and in-person options where available.</p>
                     </div>
                 </article>
-                <article class="faq-item">
+                <article class="faq-item" data-faq-tags="programs">
                     <button class="faq-item__trigger" type="button" aria-expanded="false">
                         <span>What kind of results have you seen in students who join Bright Minds?</span>
                         <img class="faq-item__icon" src="assets/icons/arrow-down.svg" alt="">
@@ -173,7 +173,7 @@
                         <p>Families report stronger academic confidence, improved skills, and more independent problem solving over time.</p>
                     </div>
                 </article>
-                <article class="faq-item">
+                <article class="faq-item" data-faq-tags="registration">
                     <button class="faq-item__trigger" type="button" aria-expanded="false">
                         <span>What if my child doesn't like it? What is your cancellation policy?</span>
                         <img class="faq-item__icon" src="assets/icons/arrow-down.svg" alt="">
@@ -182,7 +182,7 @@
                         <p>Contact the Bright Minds team for the current cancellation policy and program-specific enrollment terms.</p>
                     </div>
                 </article>
-                <article class="faq-item">
+                <article class="faq-item" data-faq-tags="programs">
                     <button class="faq-item__trigger" type="button" aria-expanded="false">
                         <span>Who are your teachers and what are their credentials?</span>
                         <img class="faq-item__icon" src="assets/icons/arrow-down.svg" alt="">
@@ -192,6 +192,7 @@
                     </div>
                 </article>
             </div>
+            <p class="faq-accordion__empty" role="status">No matching questions found.</p>
         </section>
 
         <section class="cta faq-cta" id="assessment" aria-labelledby="cta-title">

@@ -50,6 +50,72 @@ document.querySelectorAll(".faq-item__trigger").forEach((trigger) => {
     });
 });
 
+const faqSearchInput = document.querySelector(".faq-search__input");
+const faqItems = document.querySelectorAll(".faq-item");
+const faqCategories = document.querySelectorAll(".faq-category");
+const faqCategoriesGroup = document.querySelector(".faq-categories");
+const faqEmptyMessage = document.querySelector(".faq-accordion__empty");
+
+const closeFaqItem = (item) => {
+    const trigger = item.querySelector(".faq-item__trigger");
+
+    item.classList.remove("is-open");
+
+    if (trigger) {
+        trigger.setAttribute("aria-expanded", "false");
+    }
+};
+
+const applyFaqFilters = () => {
+    const activeCategory = document.querySelector(".faq-category.is-active");
+    const selectedCategory = activeCategory ? activeCategory.dataset.faqCategory : "";
+    const query = faqSearchInput ? faqSearchInput.value.trim().toLowerCase() : "";
+
+    if (faqCategoriesGroup) {
+        faqCategoriesGroup.classList.toggle("is-hidden", Boolean(query));
+    }
+
+    let visibleCount = 0;
+
+    faqItems.forEach((item) => {
+        const tags = item.dataset.faqTags ? item.dataset.faqTags.split(" ") : [];
+        const itemText = item.textContent.toLowerCase();
+        const matchesCategory = selectedCategory ? tags.includes(selectedCategory) : true;
+        const matchesSearch = query ? itemText.includes(query) : true;
+        const shouldShow = matchesCategory && matchesSearch;
+
+        item.classList.toggle("is-hidden", !shouldShow);
+
+        if (shouldShow) {
+            visibleCount += 1;
+        }
+
+        if (!shouldShow) {
+            closeFaqItem(item);
+        }
+    });
+
+    if (faqEmptyMessage) {
+        faqEmptyMessage.classList.toggle("is-visible", visibleCount === 0);
+        faqEmptyMessage.textContent = query ? `No matching questions found - ${query}` : "No matching questions found.";
+    }
+};
+
+faqCategories.forEach((category) => {
+    category.addEventListener("click", () => {
+        faqCategories.forEach((activeCategory) => {
+            activeCategory.classList.remove("is-active");
+        });
+
+        category.classList.add("is-active");
+        applyFaqFilters();
+    });
+});
+
+if (faqSearchInput) {
+    faqSearchInput.addEventListener("input", applyFaqFilters);
+}
+
 if (navToggle && navMenu) {
     const navToggleLabel = navToggle.querySelector(".nav__toggle-label");
     const setMobileMenuState = (isOpen) => {

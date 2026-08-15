@@ -36,6 +36,36 @@ if (window.Swiper && testimonialsViewport) {
     });
 }
 
+const resultsSection = document.querySelector(".results");
+const resultOdometers = document.querySelectorAll(".results__odometer[data-count]");
+
+if (resultsSection && resultOdometers.length) {
+    const animateResults = () => {
+        resultOdometers.forEach((odometer) => {
+            const count = Number(odometer.dataset.count);
+
+            odometer.textContent = window.Odometer ? String(count) : count.toLocaleString();
+        });
+    };
+
+    if ("IntersectionObserver" in window) {
+        const resultsObserver = new IntersectionObserver((entries, observer) => {
+            if (!entries.some((entry) => entry.isIntersecting)) {
+                return;
+            }
+
+            animateResults();
+            observer.disconnect();
+        }, {
+            threshold: 0.35,
+        });
+
+        resultsObserver.observe(resultsSection);
+    } else {
+        animateResults();
+    }
+}
+
 document.querySelectorAll(".faq-item__trigger").forEach((trigger) => {
     trigger.addEventListener("click", () => {
         const item = trigger.closest(".faq-item");

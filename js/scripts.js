@@ -116,6 +116,247 @@ if (faqSearchInput) {
     faqSearchInput.addEventListener("input", applyFaqFilters);
 }
 
+document.querySelectorAll("[data-schedule-view]").forEach((scheduleView) => {
+    const viewButtons = Array.from(scheduleView.querySelectorAll("[data-schedule-view-button]"));
+    const gridView = scheduleView.querySelector(".schedule-calendar__grid-view");
+    const listView = scheduleView.querySelector(".schedule-events");
+    const calendarTable = scheduleView.querySelector(".schedule-calendar__table");
+    const calendarMonth = scheduleView.querySelector(".schedule-calendar__month");
+    const previousMonthButton = scheduleView.querySelector("[data-calendar-prev]");
+    const nextMonthButton = scheduleView.querySelector("[data-calendar-next]");
+    const popup = document.createElement("div");
+    const popupPanel = document.createElement("div");
+    const popupCloseButton = document.createElement("button");
+    const monthNames = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+    ];
+    const scheduleEvents = Array.from(scheduleView.querySelectorAll(".schedule-event[data-event-date]")).map((eventCard) => {
+        const [year, month, day] = eventCard.dataset.eventDate.split("-").map(Number);
+        const title = eventCard.querySelector(".schedule-event__title");
+
+        return {
+            card: eventCard,
+            date: new Date(year, month - 1, day),
+            href: eventCard.id ? `#${eventCard.id}` : "#",
+            id: eventCard.id,
+            title: title ? title.textContent.trim() : "Class",
+        };
+    });
+
+    popup.className = "schedule-event-popup";
+    popup.hidden = true;
+    popup.setAttribute("role", "dialog");
+    popup.setAttribute("aria-modal", "true");
+
+    popupPanel.className = "schedule-event-popup__panel";
+
+    popupCloseButton.className = "schedule-event-popup__close";
+    popupCloseButton.type = "button";
+    popupCloseButton.setAttribute("aria-label", "Close event details");
+    popupCloseButton.textContent = "x";
+
+    popupPanel.append(popupCloseButton);
+    popup.append(popupPanel);
+    scheduleView.append(popup);
+
+    const getDateKey = (date) => {
+        return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+    };
+
+    const getInitialCalendarDate = () => {
+        if (calendarMonth) {
+            const [monthName, yearText] = calendarMonth.textContent.trim().split(" ");
+            const monthIndex = monthNames.indexOf(monthName);
+            const year = Number(yearText);
+
+            if (monthIndex >= 0 && Number.isFinite(year)) {
+                return new Date(year, monthIndex, 1);
+            }
+        }
+
+        return scheduleEvents.length > 0 ? new Date(scheduleEvents[0].date.getFullYear(), scheduleEvents[0].date.getMonth(), 1) : new Date();
+    };
+
+    let visibleCalendarDate = getInitialCalendarDate();
+    let lastFocusedCalendarEvent = null;
+
+    const closeEventPopup = () => {
+        popup.hidden = true;
+        popupPanel.querySelector(".schedule-event--popup")?.remove();
+
+        if (lastFocusedCalendarEvent) {
+            lastFocusedCalendarEvent.focus();
+        }
+    };
+
+    const openEventPopup = (eventItem, trigger) => {
+        const eventCard = eventItem ? eventItem.card.cloneNode(true) : null;
+
+        if (!eventCard) {
+            return;
+        }
+
+        popupPanel.querySelector(".schedule-event--popup")?.remove();
+
+        eventCard.removeAttribute("id");
+        eventCard.classList.add("schedule-event--popup");
+        popupPanel.append(eventCard);
+        popup.hidden = false;
+        lastFocusedCalendarEvent = trigger;
+        popupCloseButton.focus();
+    };
+
+    const renderCalendar = () => {
+        if (!calendarTable || !calendarMonth) {
+            return;
+        }
+
+        const year = visibleCalendarDate.getFullYear();
+        const month = visibleCalendarDate.getMonth();
+        const firstDayIndex = new Date(year, month, 1).getDay();
+        const eventsByDate = scheduleEvents.reduce((groupedEvents, eventItem) => {
+            const eventKey = getDateKey(eventItem.date);
+
+            if (!groupedEvents[eventKey]) {
+                groupedEvents[eventKey] = [];
+            }
+
+            groupedEvents[eventKey].push(eventItem);
+            return groupedEvents;
+        }, {});
+        const daysFragment = document.createDocumentFragment();
+
+        calendarMonth.textContent = `${monthNames[month]} ${year}`;
+        calendarTable.setAttribute("aria-label", `${monthNames[month]} ${year} calendar`);
+        calendarTable.querySelectorAll(".schedule-calendar__day").forEach((dayCell) => {
+            dayCell.remove();
+        });
+
+        for (let index = 0; index < 42; index += 1) {
+            const dayDate = new Date(year, month, index - firstDayIndex + 1);
+            const isCurrentMonth = dayDate.getMonth() === month;
+            const dayCell = document.createElement("div");
+            const dayNumber = document.createElement("span");
+            const dayEvents = eventsByDate[getDateKey(dayDate)] || [];
+
+            dayCell.className = "schedule-calendar__day";
+            dayCell.setAttribute("aria-label", dayDate.toLocaleDateString("en-US", {
+                day: "numeric",
+                month: "long",
+                weekday: "long",
+                year: "numeric",
+            }));
+
+            if (!isCurrentMonth) {
+                dayCell.classList.add("schedule-calendar__day--muted");
+            }
+
+            dayNumber.textContent = String(dayDate.getDate());
+            dayCell.append(dayNumber);
+
+            dayEvents.forEach((eventItem) => {
+                const eventLink = document.createElement("a");
+
+                eventLink.href = eventItem.href;
+                eventLink.dataset.eventId = eventItem.id;
+                eventLink.textContent = eventItem.title;
+                dayCell.append(eventLink);
+            });
+
+            daysFragment.append(dayCell);
+        }
+
+        calendarTable.append(daysFragment);
+    };
+
+    const setScheduleView = (selectedView) => {
+        const isGridView = selectedView === "grid";
+
+        scheduleView.dataset.scheduleView = selectedView;
+
+        if (gridView) {
+            gridView.hidden = !isGridView;
+        }
+
+        if (listView) {
+            listView.hidden = isGridView;
+        }
+
+        viewButtons.forEach((viewButton) => {
+            const isActive = viewButton.dataset.scheduleViewButton === selectedView;
+
+            viewButton.classList.toggle("is-active", isActive);
+            viewButton.setAttribute("aria-pressed", String(isActive));
+        });
+    };
+
+    viewButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+            const selectedView = button.dataset.scheduleViewButton || "grid";
+
+            setScheduleView(selectedView);
+        });
+    });
+
+    setScheduleView(scheduleView.dataset.scheduleView || "grid");
+
+    if (previousMonthButton) {
+        previousMonthButton.addEventListener("click", () => {
+            visibleCalendarDate = new Date(visibleCalendarDate.getFullYear(), visibleCalendarDate.getMonth() - 1, 1);
+            renderCalendar();
+        });
+    }
+
+    if (nextMonthButton) {
+        nextMonthButton.addEventListener("click", () => {
+            visibleCalendarDate = new Date(visibleCalendarDate.getFullYear(), visibleCalendarDate.getMonth() + 1, 1);
+            renderCalendar();
+        });
+    }
+
+    if (calendarTable) {
+        calendarTable.addEventListener("click", (event) => {
+            const eventLink = event.target instanceof Element ? event.target.closest(".schedule-calendar__day a") : null;
+
+            if (!eventLink) {
+                return;
+            }
+
+            const eventItem = scheduleEvents.find((scheduleEvent) => scheduleEvent.id === eventLink.dataset.eventId);
+
+            event.preventDefault();
+            openEventPopup(eventItem, eventLink);
+        });
+    }
+
+    popupCloseButton.addEventListener("click", closeEventPopup);
+
+    popup.addEventListener("click", (event) => {
+        if (event.target === popup) {
+            closeEventPopup();
+        }
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !popup.hidden) {
+            closeEventPopup();
+        }
+    });
+
+    renderCalendar();
+});
+
 document.querySelectorAll(".contact-form").forEach((contactForm) => {
     const panels = Array.from(contactForm.querySelectorAll("[data-form-step]"));
     const indicators = Array.from(contactForm.querySelectorAll("[data-step-indicator]"));

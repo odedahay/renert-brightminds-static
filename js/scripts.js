@@ -116,6 +116,114 @@ if (faqSearchInput) {
     faqSearchInput.addEventListener("input", applyFaqFilters);
 }
 
+document.querySelectorAll(".contact-form").forEach((contactForm) => {
+    const panels = Array.from(contactForm.querySelectorAll("[data-form-step]"));
+    const indicators = Array.from(contactForm.querySelectorAll("[data-step-indicator]"));
+    const nextButton = contactForm.querySelector("[data-next-step]");
+    const previousButton = contactForm.querySelector("[data-previous-step]");
+    const status = contactForm.querySelector(".contact-form__status");
+
+    const getCurrentStep = () => Number(contactForm.dataset.currentStep || "1");
+
+    const setStep = (step) => {
+        contactForm.dataset.currentStep = String(step);
+
+        panels.forEach((panel) => {
+            const isActive = Number(panel.dataset.formStep) === step;
+
+            panel.hidden = !isActive;
+            panel.classList.toggle("is-active", isActive);
+            panel.setAttribute("aria-hidden", String(!isActive));
+
+            panel.querySelectorAll("input, select, textarea").forEach((control) => {
+                control.disabled = !isActive;
+            });
+        });
+
+        indicators.forEach((indicator) => {
+            const indicatorStep = Number(indicator.dataset.stepIndicator);
+            const isComplete = indicatorStep < step;
+            const isActive = indicatorStep === step;
+
+            indicator.classList.toggle("contact-form__step--complete", isComplete);
+            indicator.classList.toggle("contact-form__step--active", isActive);
+            indicator.classList.toggle("contact-form__step--inactive", indicatorStep > step);
+
+            if (isActive) {
+                indicator.setAttribute("aria-current", "step");
+            } else {
+                indicator.removeAttribute("aria-current");
+            }
+        });
+
+        if (status) {
+            status.textContent = "";
+        }
+    };
+
+    const validateStep = (step) => {
+        const panel = contactForm.querySelector(`[data-form-step="${step}"]`);
+
+        if (!panel) {
+            return true;
+        }
+
+        const invalidControl = Array.from(panel.querySelectorAll("input, select, textarea")).find((control) => {
+            return !control.checkValidity();
+        });
+
+        if (invalidControl) {
+            invalidControl.reportValidity();
+            return false;
+        }
+
+        return true;
+    };
+
+    if (panels.length > 0) {
+        setStep(getCurrentStep());
+    }
+
+    if (nextButton) {
+        nextButton.addEventListener("click", () => {
+            const currentStep = getCurrentStep();
+
+            if (validateStep(currentStep)) {
+                setStep(currentStep + 1);
+            }
+        });
+    }
+
+    if (previousButton) {
+        previousButton.addEventListener("click", () => {
+            setStep(Math.max(1, getCurrentStep() - 1));
+        });
+    }
+
+    contactForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        if (!validateStep(getCurrentStep())) {
+            return;
+        }
+
+        if (contactForm.dataset.thankYouUrl) {
+            window.location.href = contactForm.dataset.thankYouUrl;
+            return;
+        }
+
+        contactForm.reset();
+
+        if (panels.length > 0) {
+            setStep(1);
+        }
+
+        if (status) {
+            status.textContent = "Thanks. We received your inquiry and will contact you soon.";
+        }
+    });
+});
+
 if (navToggle && navMenu) {
     const navToggleLabel = navToggle.querySelector(".nav__toggle-label");
     const setMobileMenuState = (isOpen) => {

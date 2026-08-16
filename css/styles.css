@@ -160,7 +160,7 @@ button {
 
 .nav__portal {
     align-items: center;
-    background: #ffffff;
+    /* background: #ffffff; */
     border-radius: 50px;
     box-shadow: var(--shadow-soft);
     color: #ff7d12;
@@ -171,6 +171,10 @@ button {
     min-height: 41px;
     padding: 8px 33px;
     white-space: nowrap;
+
+    background: var(--color-orange);
+    color: #ffffff;
+    
 }
 
 .nav__toggle {
@@ -2342,6 +2346,7 @@ select.form-field__control option {
 
     .nav__menu.is-open {
         display: flex;
+        padding-top:175px;
     }
 
     .nav__list {
@@ -2414,7 +2419,12 @@ select.form-field__control option {
         gap: 12px;
     }
 
+    .results__label {
+        order: 2;
+    }
+
     .results__value {
+        order: 1;
         text-align: left;
     }
 

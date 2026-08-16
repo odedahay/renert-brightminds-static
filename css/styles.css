@@ -628,7 +628,7 @@ button {
 }
 
 .review-card__location {
-    font-size: 1.25rem;
+    font-size: .85rem;
     line-height: 1.2;
     margin: 6px 0 0;
 }

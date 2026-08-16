@@ -588,7 +588,7 @@ button {
     display: flex;
     flex-direction: column;
     height: auto;
-    min-height: 594px;
+    min-height: 300px;
     padding: 45px;
     width: min(590px, calc(100vw - 40px));
 }

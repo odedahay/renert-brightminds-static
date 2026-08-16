@@ -558,18 +558,94 @@ if (navToggle && navMenu) {
     });
 }
 
-document.querySelectorAll("[data-review-copy]").forEach((copy) => {
-    const card = copy.closest(".review-card");
-    const button = card ? card.querySelector(".review-card__more") : null;
+const reviewCopyCharacterLimit = 200;
 
-    if (!button) {
+const getReviewCopyPreview = (text) => {
+    if (text.length <= reviewCopyCharacterLimit) {
+        return text;
+    }
+
+    return `${text.slice(0, reviewCopyCharacterLimit).trim()}...`;
+};
+
+const updateReviewCopy = (copy, button, isExpanded) => {
+    const fullText = copy.dataset.fullText || copy.textContent.trim();
+
+    copy.textContent = isExpanded ? fullText : getReviewCopyPreview(fullText);
+    copy.classList.toggle("is-collapsed", !isExpanded);
+    button.textContent = isExpanded ? "Show Less" : "Show More";
+    button.setAttribute("aria-expanded", String(isExpanded));
+
+    if (testimonialsViewport?.swiper) {
+        testimonialsViewport.swiper.update();
+    }
+};
+
+const hasHiddenReviewCopy = (copy) => {
+    const fullText = copy.dataset.fullText || copy.textContent.trim();
+
+    return fullText.length > reviewCopyCharacterLimit;
+};
+
+const syncReviewMoreButton = (copy, button) => {
+    const isLong = hasHiddenReviewCopy(copy);
+    const isExpanded = button.getAttribute("aria-expanded") === "true";
+
+    button.hidden = !isLong;
+
+    if (isLong) {
+        updateReviewCopy(copy, button, isExpanded);
         return;
     }
 
-    copy.classList.add("is-collapsed");
+    copy.classList.remove("is-collapsed");
+    button.textContent = "Show More";
+    button.setAttribute("aria-expanded", "false");
+};
+
+const reviewCopies = Array.from(document.querySelectorAll("[data-review-copy]"));
+
+const syncReviewMoreButtons = () => {
+    reviewCopies.forEach((copy) => {
+        const button = copy.closest(".review-card")?.querySelector(".review-card__more");
+
+        if (button) {
+            syncReviewMoreButton(copy, button);
+        }
+    });
+};
+
+reviewCopies.forEach((copy, index) => {
+    const card = copy.closest(".review-card");
+    let button = card ? card.querySelector(".review-card__more") : null;
+
+    if (!card) {
+        return;
+    }
+
+    if (!copy.id) {
+        copy.id = `review-card-copy-${index + 1}`;
+    }
+
+    copy.dataset.fullText = copy.textContent.trim();
+
+    if (!button) {
+        button = document.createElement("button");
+        button.className = "review-card__more";
+        button.type = "button";
+        copy.insertAdjacentElement("afterend", button);
+    }
+
+    button.setAttribute("aria-controls", copy.id);
+    button.setAttribute("aria-expanded", "false");
+    syncReviewMoreButton(copy, button);
 
     button.addEventListener("click", () => {
-        const isCollapsed = copy.classList.toggle("is-collapsed");
-        button.textContent = isCollapsed ? "Continue Reading" : "Show Less";
+        const isExpanded = button.getAttribute("aria-expanded") !== "true";
+
+        updateReviewCopy(copy, button, isExpanded);
     });
 });
+
+window.addEventListener("load", syncReviewMoreButtons);
+window.addEventListener("resize", syncReviewMoreButtons);

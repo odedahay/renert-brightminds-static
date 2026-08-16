@@ -510,7 +510,7 @@ button {
 
 .program-card__copy {
     color: #000000;
-    font-size: 1.25rem;
+    font-size: 1.15rem;
     line-height: 1.28;
     margin: 0;
 }
@@ -640,12 +640,12 @@ button {
 }
 
 .review-card__stars img {
-    height: 35px;
-    width: 35px;
+    height: 18px;
+    width: 18px;
 }
 
 .review-card__copy {
-    font-size: 1.25rem;
+    font-size: 1rem;
     line-height: 1.35;
     margin: 0;
 }
@@ -661,10 +661,10 @@ button {
     align-self: flex-start;
     background: transparent;
     border: 0;
-    color: #000b8a;
+    color: var(--color-orange);
     cursor: pointer;
-    font-size: 1.25rem;
-    font-weight: 700;
+    font-size: 0.9375rem;
+    font-weight: 600;
     margin: 20px 0 0;
     padding: 0;
 }
@@ -3027,7 +3027,7 @@ select.form-field__control option {
     }
 
     .program-card__copy {
-        font-size: 1.125rem;
+        font-size: 1.15rem;
     }
 
     .review-card {

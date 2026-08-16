@@ -157,6 +157,8 @@ document.querySelectorAll("[data-schedule-view]").forEach((scheduleView) => {
     const popup = document.createElement("div");
     const popupPanel = document.createElement("div");
     const popupCloseButton = document.createElement("button");
+    const popupTitle = document.createElement("h3");
+    const popupEvents = document.createElement("div");
     const monthNames = [
         "January",
         "February",
@@ -178,8 +180,6 @@ document.querySelectorAll("[data-schedule-view]").forEach((scheduleView) => {
         return {
             card: eventCard,
             date: new Date(year, month - 1, day),
-            href: eventCard.id ? `#${eventCard.id}` : "#",
-            id: eventCard.id,
             title: title ? title.textContent.trim() : "Class",
         };
     });
@@ -196,7 +196,12 @@ document.querySelectorAll("[data-schedule-view]").forEach((scheduleView) => {
     popupCloseButton.setAttribute("aria-label", "Close event details");
     popupCloseButton.textContent = "x";
 
-    popupPanel.append(popupCloseButton);
+    popupTitle.className = "schedule-event-popup__title";
+    popupTitle.id = "schedule-event-popup-title";
+    popupEvents.className = "schedule-event-popup__events";
+    popup.setAttribute("aria-labelledby", popupTitle.id);
+
+    popupPanel.append(popupCloseButton, popupTitle, popupEvents);
     popup.append(popupPanel);
     scheduleView.append(popup);
 
@@ -223,25 +228,34 @@ document.querySelectorAll("[data-schedule-view]").forEach((scheduleView) => {
 
     const closeEventPopup = () => {
         popup.hidden = true;
-        popupPanel.querySelector(".schedule-event--popup")?.remove();
+        popupEvents.replaceChildren();
 
         if (lastFocusedCalendarEvent) {
             lastFocusedCalendarEvent.focus();
         }
     };
 
-    const openEventPopup = (eventItem, trigger) => {
-        const eventCard = eventItem ? eventItem.card.cloneNode(true) : null;
-
-        if (!eventCard) {
+    const openEventPopup = (eventItems, trigger, date) => {
+        if (eventItems.length === 0) {
             return;
         }
 
-        popupPanel.querySelector(".schedule-event--popup")?.remove();
+        popupEvents.replaceChildren();
+        popupTitle.textContent = date.toLocaleDateString("en-US", {
+            day: "numeric",
+            month: "long",
+            weekday: "long",
+            year: "numeric",
+        });
 
-        eventCard.removeAttribute("id");
-        eventCard.classList.add("schedule-event--popup");
-        popupPanel.append(eventCard);
+        eventItems.forEach((eventItem) => {
+            const eventCard = eventItem.card.cloneNode(true);
+
+            eventCard.removeAttribute("id");
+            eventCard.classList.add("schedule-event--popup");
+            popupEvents.append(eventCard);
+        });
+
         popup.hidden = false;
         lastFocusedCalendarEvent = trigger;
         popupCloseButton.focus();
@@ -295,13 +309,20 @@ document.querySelectorAll("[data-schedule-view]").forEach((scheduleView) => {
             dayNumber.textContent = String(dayDate.getDate());
             dayCell.append(dayNumber);
 
-            dayEvents.forEach((eventItem) => {
-                const eventLink = document.createElement("a");
+            if (dayEvents.length > 0) {
+                dayCell.classList.add("schedule-calendar__day--has-events");
+                dayCell.dataset.eventDate = getDateKey(dayDate);
+                dayCell.tabIndex = 0;
+                dayCell.setAttribute("role", "button");
+                dayCell.setAttribute("aria-label", `${dayCell.getAttribute("aria-label")}, ${dayEvents.length} event${dayEvents.length === 1 ? "" : "s"}`);
+            }
 
-                eventLink.href = eventItem.href;
-                eventLink.dataset.eventId = eventItem.id;
-                eventLink.textContent = eventItem.title;
-                dayCell.append(eventLink);
+            dayEvents.forEach((eventItem) => {
+                const eventLabel = document.createElement("span");
+
+                eventLabel.className = "schedule-calendar__event-title";
+                eventLabel.textContent = eventItem.title;
+                dayCell.append(eventLabel);
             });
 
             daysFragment.append(dayCell);
@@ -356,17 +377,36 @@ document.querySelectorAll("[data-schedule-view]").forEach((scheduleView) => {
     }
 
     if (calendarTable) {
-        calendarTable.addEventListener("click", (event) => {
-            const eventLink = event.target instanceof Element ? event.target.closest(".schedule-calendar__day a") : null;
+        const openDayCellEvents = (dayCell) => {
+            const eventItems = scheduleEvents.filter((scheduleEvent) => getDateKey(scheduleEvent.date) === dayCell.dataset.eventDate);
 
-            if (!eventLink) {
+            if (eventItems.length === 0) {
                 return;
             }
 
-            const eventItem = scheduleEvents.find((scheduleEvent) => scheduleEvent.id === eventLink.dataset.eventId);
+            openEventPopup(eventItems, dayCell, eventItems[0].date);
+        };
+
+        calendarTable.addEventListener("click", (event) => {
+            const dayCell = event.target instanceof Element ? event.target.closest(".schedule-calendar__day--has-events") : null;
+
+            if (!dayCell) {
+                return;
+            }
 
             event.preventDefault();
-            openEventPopup(eventItem, eventLink);
+            openDayCellEvents(dayCell);
+        });
+
+        calendarTable.addEventListener("keydown", (event) => {
+            const dayCell = event.target instanceof Element ? event.target.closest(".schedule-calendar__day--has-events") : null;
+
+            if (!dayCell || (event.key !== "Enter" && event.key !== " ")) {
+                return;
+            }
+
+            event.preventDefault();
+            openDayCellEvents(dayCell);
         });
     }
 

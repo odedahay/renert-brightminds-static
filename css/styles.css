@@ -984,6 +984,19 @@ button {
     min-height: 125px;
 }
 
+.schedule-calendar__day--has-events {
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.schedule-calendar__day--has-events:hover,
+.schedule-calendar__day--has-events:focus-visible {
+    background: #f4fbff;
+    border-color: #8bc8f5;
+    box-shadow: inset 0 0 0 1px #8bc8f5;
+    outline: 0;
+}
+
 .schedule-calendar__day--muted {
     background: #f8f8f8;
 }
@@ -999,19 +1012,22 @@ button {
     color: #828282;
 }
 
-.schedule-calendar__day a {
+.schedule-calendar__day a,
+.schedule-calendar__day .schedule-calendar__event-title {
+    background: #e5f3ff;
+    border-radius: 3px;
     color: #0092ff;
     font-size: 0.75rem;
     font-weight: 500;
     line-height: 1.2;
     overflow-wrap: anywhere;
-    background: #E5F3FF;
-    width: fit-content;
     padding: 3px 6px;
-    border-radius: 3px;
+    width: fit-content;
 }
 
-.schedule-calendar__day a:hover {
+.schedule-calendar__day a:hover,
+.schedule-calendar__day--has-events:hover .schedule-calendar__event-title,
+.schedule-calendar__day--has-events:focus-visible .schedule-calendar__event-title {
     color: rgb(65, 144, 205);
     background: #b4d9fa;
 }
@@ -1037,6 +1053,28 @@ button {
     width: min(100%, 680px);
 }
 
+.schedule-event-popup__title {
+    background: #ffffff;
+    border-radius: 8px 8px 0 0;
+    color: #081738;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0;
+    padding: 24px 64px 18px 24px;
+}
+
+.schedule-event-popup__events {
+    background: #ffffff;
+    border-radius: 0 0 8px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: min(72vh, 620px);
+    overflow-y: auto;
+    padding: 0 24px 24px;
+}
+
 .schedule-event-popup__close {
     align-items: center;
     background: #ffffff;
@@ -1058,9 +1096,8 @@ button {
 }
 
 .schedule-event.schedule-event--popup {
-    border-color: transparent;
+    border-color: #d6e0ed;
     border-radius: 8px;
-    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.22);
     min-height: 185px;
     padding: 24px;
 }
@@ -1170,9 +1207,44 @@ button {
     width: 100%;
 }
 
+.schedule-event__link:hover {
+     color:#f0933a;
+}
+
 .schedule-event__link img {
     height: 24.7px;
     width: 23.8px;
+}
+
+.schedule-event__more-link {
+    align-items: center;
+    color: var(--color-orange);
+    display: inline-flex;
+    font-size: 1.15rem;
+    font-weight: 600;
+    gap: 2px;
+    line-height: 1.5;
+    margin-top: 2px;
+    padding-top: 9px;
+    width: 100%;
+
+}
+
+.schedule-event__more-link img {
+    height: 24.7px;
+    width: 23.8px;
+}
+
+.schedule-event__more-link:hover {
+    color:#f0933a;
+}
+
+.schedule-events__view-more-button a{
+    display: flex;
+    justify-content: center;
+    aling-item: center;
+    margin: 15px auto;
+    max-width: 1280px;
 }
 
 .schedule-calendar__cta {
@@ -1211,6 +1283,127 @@ button {
 
 .event-detail-template .nav.is-sticky {
     background: rgba(255, 255, 255, 0.96);
+}
+
+.event-list-page {
+    background: #ffffff;
+}
+
+.event-list {
+    padding: 60px var(--page-gutter) 0;
+}
+
+.event-list__inner {
+    margin: 0 auto;
+    max-width: 1152px;
+}
+
+.event-list__header {
+    align-items: center;
+    display: flex;
+    gap: 32px;
+    justify-content: space-between;
+    padding-bottom: 40px;
+}
+
+.event-list__title {
+    font-size: clamp(2.5rem, 4.2vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.011em;
+    line-height: 1.1;
+    margin: 0;
+}
+
+.event-list__archive-link {
+    align-items: center;
+    color: var(--color-orange);
+    display: inline-flex;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    gap: 6px;
+    line-height: 1.5;
+    white-space: nowrap;
+}
+
+.event-list__archive-link:hover {
+    color: #f0933a;
+}
+
+.event-list__archive-link img {
+    height: 18px;
+    width: 18px;
+}
+
+.event-list__events {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-width: none;
+    padding-bottom: 34px;
+}
+
+.event-list__event {
+    min-width: 0;
+}
+
+.event-list__pagination {
+    align-items: center;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    padding: 10px 0;
+}
+
+.event-list__pagination-link {
+    align-items: center;
+    color: var(--color-orange);
+    display: inline-flex;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    gap: 4px;
+    line-height: 1.5;
+}
+
+.event-list__pagination-link:hover {
+    color: #f0933a;
+}
+
+.event-list__pagination-link img {
+    height: 18px;
+    width: 18px;
+}
+
+.event-list__pagination-link--previous img {
+    transform: rotate(180deg);
+}
+
+.event-list__pagination-pages {
+    align-items: center;
+    display: flex;
+    gap: 5px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.event-list__pagination-page {
+    align-items: center;
+    background: #f8f8f8;
+    border-radius: 4px;
+    color: #828282;
+    display: inline-flex;
+    font-size: 0.875rem;
+    font-weight: 600;
+    height: 24px;
+    justify-content: center;
+    line-height: 1.2;
+    width: 24px;
+}
+
+.event-list__pagination-page.is-active,
+.event-list__pagination-page:hover {
+    background: var(--color-orange);
+    color: #ffffff;
 }
 
 .event-detail {
@@ -2390,6 +2583,20 @@ select.form-field__control option {
         width: 100%;
     }
 
+    .event-list {
+        padding-top: 48px;
+    }
+
+    .event-list__header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .event-list__events {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
     .enroll-strip__inner {
         align-items: flex-start;
         flex-direction: column;
@@ -2549,13 +2756,29 @@ select.form-field__control option {
         padding-top: 36px;
     }
 
+    .event-list {
+        padding-top: 36px;
+    }
+
     .event-detail__header {
+        padding-bottom: 32px;
+    }
+
+    .event-list__header {
         padding-bottom: 32px;
     }
 
     .event-detail__layout {
         gap: 32px;
         padding-bottom: 40px;
+    }
+
+    .event-list__title {
+        font-size: 2.25rem;
+    }
+
+    .event-list__pagination {
+        flex-wrap: wrap;
     }
 
     .event-detail__title {
